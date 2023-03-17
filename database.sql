@@ -1,6 +1,9 @@
-CREATE DATABASE ESANCE;
- CREATE TABLE Users {
+CREATE DATABASE EXPENSES;
+ CREATE TABLE UsersTable 
     (
-        s_id SERIAL 
+        u_id SERIAL VARCHAR(100) FOREIGN KEY PRIMARY KEY UNIQUE,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        store BOOLEAN,
+        joined_at TIMESTAMP NOt NULL
     )
- }
+ 

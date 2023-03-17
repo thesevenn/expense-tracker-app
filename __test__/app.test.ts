@@ -5,5 +5,3 @@ describe("start of test for app", () => {
 		expect(env.PORT).not.toBeUndefined();
 	});
 });
-
-describe("upcoming test", () => {});
