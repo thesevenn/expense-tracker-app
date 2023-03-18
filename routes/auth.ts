@@ -1,0 +1,32 @@
+import {Router} from "express";
+
+const router: Router = Router();
+
+// TODO =>
+/* 
+create new user with email and password or (email only login) = w/ JWT.
+store that user in db.
+setup login route,
+logout route
+*/
+
+// GET at - /logout
+//  logs user out and invadlidates the access-token
+router.get("/logout");
+
+// POST at - /login
+//  logins existing user using email login w/ jwt or email and password login.
+//  body contains - email and password(if pass implemeneted).
+router.post("/login");
+
+// POST at - /sign-up
+//  registers new user with email.
+//  body contains - email, dob, username, pass(?), store status
+router.post("sign-up");
+
+// GET at - /revalidate
+//  generates a new access token for given valid refresh token.
+//  body contains - refresh token.
+router.get("revalidate");
+
+export default router;
