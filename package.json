@@ -2,8 +2,8 @@
 	"author": "Sevenn",
 	"license": "MIT",
 	"scripts": {
-		"start": "node ./dist/server.js",
-		"dev": "nodemon server.ts",
+		"start": "node ./dist/index.js",
+		"dev": "nodemon index.ts",
 		"ts": "tsc --watch",
 		"test-w": "jest --watch",
 		"test": "jest"
