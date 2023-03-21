@@ -48,5 +48,7 @@ CREATE DATABASE expenses;
         avg NUMERIC(10,3),
         u_id FOREIGN KEY
     )
- 
- 
+
+
+-- create new expense => day 1 to day 30 (1 month) if want month select * from expense where id = "" AND month = may
+-- SELECT * from users where EXTRACT(year from users.joined)=2023;

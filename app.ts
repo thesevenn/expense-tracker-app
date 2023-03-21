@@ -4,14 +4,21 @@ import cors from "cors";
 import indexRouter from "./routes";
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
+import {env} from "./constants/_env";
+import logger from "./middlewares/logger";
 
 const app: express.Application = express();
-cors({origin: "http:localhost:3000"});
-app.use(express.urlencoded({extended: false}));
-app.use(express.json());
 
-app.use("/v1/", indexRouter);
-app.use("/v1/auth", authRouter);
-app.use("/v1/user", userRouter);
+export function appProvider() {
+	cors({origin: env.ORIGIN, credentials: true});
+	app.use(express.urlencoded({extended: false}));
+	app.use(express.json());
+	app.use(logger);
+
+	app.use("/v1/", indexRouter);
+	app.use("/api/v1/auth", authRouter);
+	app.use("/api/v1/user", userRouter);
+	return app;
+}
 
 export default app;
