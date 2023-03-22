@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.query = void 0;
+exports.query = exports.pool = void 0;
 const pg_1 = require("pg");
 const _env_1 = require("../constants/_env");
 const config = {
@@ -10,6 +10,6 @@ const config = {
     user: _env_1.env.PGUSERNAME || "postgres",
     password: _env_1.env.PGPASSWORD || "",
 };
-const pool = new pg_1.Pool(config);
-const query = (text, params) => pool.query(text, params);
+exports.pool = new pg_1.Pool(config);
+const query = (text, params) => exports.pool.query(text, params);
 exports.query = query;

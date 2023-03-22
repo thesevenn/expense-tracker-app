@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 import indexRouter from "./routes";
 import authRouter from "./routes/auth";
@@ -9,15 +10,17 @@ import logger from "./middlewares/logger";
 
 const app: express.Application = express();
 
-export function appProvider() {
-	cors({origin: env.ORIGIN, credentials: true});
-	app.use(express.urlencoded({extended: false}));
-	app.use(express.json());
-	app.use(logger);
+cors({credentials: true, origin: env.ORIGIN});
+app.use(cookieParser());
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 
-	app.use("/v1/", indexRouter);
-	app.use("/api/v1/auth", authRouter);
-	app.use("/api/v1/user", userRouter);
+app.use(logger);
+app.use("/v1/", indexRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
+
+export function appProvider() {
 	return app;
 }
 

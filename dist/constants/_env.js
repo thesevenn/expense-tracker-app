@@ -13,6 +13,7 @@ const PGPASSWORD = process.env.PGPASSWORD;
 const PGDATABASE = process.env.PGDATABASE;
 const PGPORT = Number(process.env.PGPORT);
 const ORIGIN = process.env.ORIGIN;
+const JWTSECRET = process.env.JWTSECRET;
 exports.env = {
     PORT,
     PGHOST,
@@ -21,4 +22,5 @@ exports.env = {
     PGDATABASE,
     PGPORT,
     ORIGIN,
+    JWTSECRET,
 };

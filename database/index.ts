@@ -11,7 +11,7 @@ const config: PoolConfig = {
 	password: env.PGPASSWORD || "",
 };
 
-const pool = new Pool(config);
+export const pool = new Pool(config);
 
 export const query = (text: string, params?: Array<string>) =>
 	pool.query(text, params);
