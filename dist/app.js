@@ -13,7 +13,7 @@ const user_1 = __importDefault(require("./routes/user"));
 const _env_1 = require("./constants/_env");
 const logger_1 = __importDefault(require("./middlewares/logger"));
 const app = (0, express_1.default)();
-(0, cors_1.default)({ credentials: true, origin: _env_1.env.ORIGIN });
+app.use((0, cors_1.default)({ credentials: true, origin: _env_1.env.ORIGIN }));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use(express_1.default.json());

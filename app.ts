@@ -10,7 +10,7 @@ import logger from "./middlewares/logger";
 
 const app: express.Application = express();
 
-cors({credentials: true, origin: env.ORIGIN});
+app.use(cors({credentials: true, origin: env.ORIGIN}));
 app.use(cookieParser());
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());

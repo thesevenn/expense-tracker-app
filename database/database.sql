@@ -5,6 +5,7 @@ CREATE DATABASE finances;
         id VARCHAR(100) PRIMARY KEY,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
+        username VARCHAR(50) NOT NULL,
         store BOOLEAN DEFAULT FALSE,
         joined TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

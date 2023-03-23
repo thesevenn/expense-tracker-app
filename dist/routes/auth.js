@@ -8,13 +8,14 @@ const router = (0, express_1.Router)();
 const login_1 = __importDefault(require("../controllers/login"));
 const logout_1 = __importDefault(require("../controllers/logout"));
 const signup_1 = __importDefault(require("../controllers/signup"));
-const revalidate_1 = __importDefault(require("../controllers/revalidate"));
+const newAccess_1 = __importDefault(require("../controllers/newAccess"));
 // TODO =>
 /*
 create new user with email and password or (email only login) = w/ JWT.
 store that user in db.
 setup login route,
-logout route
+logout route,
+generate new access for refresh valid refresh token
 */
 // GET at - /logout
 //  logs user out and invadlidates the access-token
@@ -30,5 +31,5 @@ router.post("/sign-up", signup_1.default);
 // GET at - /revalidate
 //  generates a new access token for given valid refresh token.
 //  body contains - refresh token.
-router.get("/revalidate", revalidate_1.default);
+router.get("/new-access", newAccess_1.default);
 exports.default = router;
