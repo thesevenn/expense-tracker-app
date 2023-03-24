@@ -16,7 +16,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const sanitize_1 = require("../utils/validations/sanitize");
 const database_1 = require("../database");
 const generateJwt_1 = __importDefault(require("../utils/jwt/generateJwt"));
-const _env_1 = require("../constants/_env");
+const token_type_1 = require("../types/token.type");
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let { email, password } = req.body;
@@ -41,16 +41,22 @@ function login(req, res) {
                     else if (verifyPassword && rows[0].email == email) {
                         res
                             .status(201)
-                            .cookie("accessToken", (0, generateJwt_1.default)(rows[0].id, _env_1.env.ACCESS_SECRET), {
+                            .cookie("accessToken", (0, generateJwt_1.default)(rows[0].id, {
+                            type: token_type_1.Type.access,
+                            expiresIn: "30min",
+                        }), {
                             httpOnly: true,
+                            maxAge: 1000 * 60,
                         })
-                            .cookie("refreshToken", (0, generateJwt_1.default)(rows[0].id, _env_1.env.REFRESH_SECRET), { httpOnly: true })
+                            .cookie("refreshToken", (0, generateJwt_1.default)(rows[0].id, {
+                            type: token_type_1.Type.refresh,
+                            expiresIn: "7days",
+                        }), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
                             .cookie("user", rows[0].id, { httpOnly: true })
                             .json({
                             success: true,
                             auth: true,
                             message: "login successfully as: " + rows[0].email,
-                            user: rows[0].id,
                         });
                     }
                 }
@@ -65,7 +71,7 @@ function login(req, res) {
         catch (error) {
             if (error instanceof Error) {
                 console.log(error.message);
-                res.status(500).json({
+                res.status(503).json({
                     success: false,
                     message: "An error occured on our side, try again later.",
                 });

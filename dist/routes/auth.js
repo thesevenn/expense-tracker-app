@@ -28,8 +28,8 @@ router.post("/login", login_1.default);
 //  registers new user with email.
 //  body contains - email, dob, username, pass(?), store status
 router.post("/sign-up", signup_1.default);
-// GET at - /revalidate
+// GET at - /new-access
 //  generates a new access token for given valid refresh token.
-//  body contains - refresh token.
+//  body contains - {}, refresh token from cookies
 router.get("/new-access", newAccess_1.default);
 exports.default = router;

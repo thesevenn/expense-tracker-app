@@ -13,7 +13,7 @@ function logout(req, res) {
     }
     catch (error) {
         if (error instanceof Error) {
-            res.status(500).json({
+            res.status(503).json({
                 success: false,
                 message: "An error occured on our side, try again later.",
             });

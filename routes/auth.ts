@@ -30,9 +30,9 @@ router.post("/login", login);
 //  body contains - email, dob, username, pass(?), store status
 router.post("/sign-up", signup);
 
-// GET at - /revalidate
+// GET at - /new-access
 //  generates a new access token for given valid refresh token.
-//  body contains - refresh token.
+//  body contains - {}, refresh token from cookies
 router.get("/new-access", newAccess);
 
 export default router;

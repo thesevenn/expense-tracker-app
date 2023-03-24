@@ -18,10 +18,17 @@ const sanitize_1 = require("../utils/validations/sanitize");
 const database_1 = require("../database");
 function signup(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        let { email, password, username } = req.body;
+        let { email, password, name } = req.body;
         email = (0, sanitize_1.sanitize)(email);
         password = (0, sanitize_1.sanitize)(password);
+        name = (0, sanitize_1.sanitize)(name);
         try {
+            if (!name) {
+                res.status(400).json({
+                    success: false,
+                    message: "everyone has a name, please tell us yours",
+                });
+            }
             if (!email || !password) {
                 res.status(400).json({
                     success: false,
@@ -39,7 +46,7 @@ function signup(req, res) {
                 else {
                     const hashPassword = yield bcrypt_1.default.hash(password, 15);
                     const id = (0, generateId_1.default)(email);
-                    const { rows } = yield (0, database_1.query)("INSERT INTO users (id,email,password) values ($1,$2,$3) returning *;", [id, email, hashPassword]);
+                    const { rows } = yield (0, database_1.query)("INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4) returning *;", [id, email, hashPassword, name]);
                     res.status(200).json({
                         success: true,
                         message: "user registerd succesfully.",
@@ -50,7 +57,7 @@ function signup(req, res) {
         catch (error) {
             if (error instanceof Error) {
                 console.log(error.message);
-                res.status(500).json({
+                res.status(503).json({
                     success: false,
                     message: "An error occured on our side try again later.",
                 });

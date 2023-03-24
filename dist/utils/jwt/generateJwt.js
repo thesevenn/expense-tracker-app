@@ -4,15 +4,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-function generateJwt(id, secret = "zyNfmToxd03") {
-    if (!secret) {
-        return "";
+const _env_1 = require("../../constants/_env");
+function generateJwt(id, { type, expiresIn = "30min" }) {
+    const secret = type == "access" ? _env_1.env.ACCESS_SECRET : _env_1.env.REFRESH_SECRET;
+    if (secret) {
+        const payload = {
+            active: id,
+            iat: Date.now() / 1000,
+        };
+        const webToken = jsonwebtoken_1.default.sign(payload, secret, { expiresIn: expiresIn });
+        return webToken;
     }
-    const payload = {
-        active: id,
-        iat: Date.now() / 1000,
-    };
-    const webToken = jsonwebtoken_1.default.sign(payload, secret, { expiresIn: "30min" });
-    return webToken;
+    else {
+        return false;
+    }
 }
 exports.default = generateJwt;

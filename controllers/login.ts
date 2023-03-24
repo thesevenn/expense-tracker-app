@@ -6,7 +6,7 @@ import User from "../types/user.type";
 import {sanitize} from "../utils/validations/sanitize";
 import {query} from "../database";
 import generateJwt from "../utils/jwt/generateJwt";
-import {env} from "../constants/_env";
+import {Type} from "../types/token.type";
 
 export default async function login(req: Request, res: Response) {
 	let {email, password} = req.body;
@@ -32,20 +32,30 @@ export default async function login(req: Request, res: Response) {
 				} else if (verifyPassword && rows[0].email == email) {
 					res
 						.status(201)
-						.cookie("accessToken", generateJwt(rows[0].id, env.ACCESS_SECRET), {
-							httpOnly: true,
-						})
+						.cookie(
+							"accessToken",
+							generateJwt(rows[0].id, {
+								type: Type.access,
+								expiresIn: "30min",
+							}),
+							{
+								httpOnly: true,
+								maxAge: 1000 * 60,
+							}
+						)
 						.cookie(
 							"refreshToken",
-							generateJwt(rows[0].id, env.REFRESH_SECRET),
-							{httpOnly: true}
+							generateJwt(rows[0].id, {
+								type: Type.refresh,
+								expiresIn: "7days",
+							}),
+							{httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7}
 						)
 						.cookie("user", rows[0].id, {httpOnly: true})
 						.json({
 							success: true,
 							auth: true,
 							message: "login successfully as: " + rows[0].email,
-							user: rows[0].id,
 						});
 				}
 			} else {
@@ -58,7 +68,7 @@ export default async function login(req: Request, res: Response) {
 	} catch (error) {
 		if (error instanceof Error) {
 			console.log(error.message);
-			res.status(500).json({
+			res.status(503).json({
 				success: false,
 				message: "An error occured on our side, try again later.",
 			});

@@ -11,10 +11,17 @@ export default async function signup(
 	req: Request,
 	res: Response
 ): Promise<void> {
-	let {email, password, username} = req.body;
+	let {email, password, name} = req.body;
 	email = sanitize(email);
 	password = sanitize(password);
+	name = sanitize(name);
 	try {
+		if (!name) {
+			res.status(400).json({
+				success: false,
+				message: "everyone has a name, please tell us yours",
+			});
+		}
 		if (!email || !password) {
 			res.status(400).json({
 				success: false,
@@ -34,8 +41,8 @@ export default async function signup(
 				const hashPassword: string = await bcrypt.hash(password, 15);
 				const id = generateId(email);
 				const {rows} = await query(
-					"INSERT INTO users (id,email,password) values ($1,$2,$3) returning *;",
-					[id, email, hashPassword]
+					"INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4) returning *;",
+					[id, email, hashPassword, name]
 				);
 
 				res.status(200).json({
@@ -47,7 +54,7 @@ export default async function signup(
 	} catch (error) {
 		if (error instanceof Error) {
 			console.log(error.message);
-			res.status(500).json({
+			res.status(503).json({
 				success: false,
 				message: "An error occured on our side try again later.",
 			});

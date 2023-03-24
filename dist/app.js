@@ -20,7 +20,7 @@ app.use(express_1.default.json());
 app.use(logger_1.default);
 app.use("/v1/", routes_1.default);
 app.use("/api/v1/auth", auth_1.default);
-app.use("/api/v1/user", user_1.default);
+app.use("/api/v1/users", user_1.default);
 function appProvider() {
     return app;
 }
