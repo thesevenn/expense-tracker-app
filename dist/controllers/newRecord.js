@@ -13,12 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../database");
+const idvarient_type_1 = require("../types/idvarient.type");
 const generateId_1 = __importDefault(require("../utils/generateId"));
 // TODO add auth middleware
 function newRecord(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { amount, credit, userId } = req.body;
         // TODO => sanitize
+        const { user } = req;
         try {
             if (!amount || !credit || !userId) {
                 res.status(400).json({
@@ -28,7 +30,7 @@ function newRecord(req, res) {
             }
             else {
                 // TODO => validation on amount, credit, userId
-                const id = (0, generateId_1.default)(userId);
+                const id = (0, generateId_1.default)(userId, idvarient_type_1.Varient.tiny);
                 const result = yield (0, database_1.query)("INSERT INTO records(id,amount,credit,u_id) values($!,$2,$3) returning *;", [id, amount, credit, userId]);
             }
         }

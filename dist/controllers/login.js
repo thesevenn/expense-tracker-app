@@ -17,6 +17,7 @@ const sanitize_1 = require("../utils/validations/sanitize");
 const database_1 = require("../database");
 const generateJwt_1 = __importDefault(require("../utils/jwt/generateJwt"));
 const token_type_1 = require("../types/token.type");
+const durations_type_1 = require("../types/durations.type");
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let { email, password } = req.body;
@@ -43,14 +44,14 @@ function login(req, res) {
                             .status(201)
                             .cookie("accessToken", (0, generateJwt_1.default)(rows[0].id, {
                             type: token_type_1.Type.access,
-                            expiresIn: "30min",
+                            expiresIn: durations_type_1.durations.short,
                         }), {
                             httpOnly: true,
-                            maxAge: 1000 * 60,
+                            maxAge: 1000 * 60 * 30,
                         })
                             .cookie("refreshToken", (0, generateJwt_1.default)(rows[0].id, {
                             type: token_type_1.Type.refresh,
-                            expiresIn: "7days",
+                            expiresIn: durations_type_1.durations.long,
                         }), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
                             .cookie("user", rows[0].id, { httpOnly: true })
                             .json({

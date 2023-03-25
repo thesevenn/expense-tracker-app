@@ -1,15 +1,18 @@
 import {Request, Response} from "express";
 
 import {query} from "../database";
+import {Varient} from "../types/idvarient.type";
+import RequestWithUser from "../types/request.type";
 import generateId from "../utils/generateId";
 
 // TODO add auth middleware
 export default async function newRecord(
-	req: Request,
+	req: RequestWithUser,
 	res: Response
 ): Promise<void> {
 	const {amount, credit, userId} = req.body;
 	// TODO => sanitize
+	const {user} = req;
 
 	try {
 		if (!amount || !credit || !userId) {
@@ -19,7 +22,7 @@ export default async function newRecord(
 			});
 		} else {
 			// TODO => validation on amount, credit, userId
-			const id: string = generateId(userId);
+			const id: string = generateId(userId, Varient.tiny);
 			const result = await query(
 				"INSERT INTO records(id,amount,credit,u_id) values($!,$2,$3) returning *;",
 				[id, amount, credit, userId]

@@ -1,5 +1,8 @@
 import {Router} from "express";
 
+import newRecord from "../controllers/newRecord";
+import isAuthenticated from "../middlewares/verifyUserAccess";
+
 const router: Router = Router();
 
 // TODO =>
@@ -12,10 +15,10 @@ monthly summary.
 yearly summary.
 pagination for list.
 */
-
+router.use(isAuthenticated);
 // POST at - /records
 // body - {amount,creditBool,userId}
-router.post("/records");
+router.post("/records", newRecord);
 
 // GET at - /records
 // response shape => 10-20 recent records [...{record-row}]

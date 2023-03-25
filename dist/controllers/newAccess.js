@@ -19,10 +19,16 @@ function newAccess(req, res) {
         const user = (0, verifyJwtReturnUser_1.default)(refreshToken);
         if (user) {
             const accessToken = (0, generateJwt_1.default)(user, {
-                type: token_type_1.Type.refresh,
+                type: token_type_1.Type.access,
                 expiresIn: durations_type_1.durations.short,
             });
-            res.status(200).cookie("accessToken", accessToken).json({
+            res
+                .status(200)
+                .cookie("accessToken", accessToken, {
+                httpOnly: true,
+                maxAge: 1800000,
+            })
+                .json({
                 success: true,
                 message: "access provided",
             });

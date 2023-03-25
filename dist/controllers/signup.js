@@ -16,6 +16,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const generateId_1 = __importDefault(require("../utils/generateId"));
 const sanitize_1 = require("../utils/validations/sanitize");
 const database_1 = require("../database");
+const idvarient_type_1 = require("../types/idvarient.type");
 function signup(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let { email, password, name } = req.body;
@@ -45,7 +46,7 @@ function signup(req, res) {
                 }
                 else {
                     const hashPassword = yield bcrypt_1.default.hash(password, 15);
-                    const id = (0, generateId_1.default)(email);
+                    const id = (0, generateId_1.default)(email, idvarient_type_1.Varient.full);
                     const { rows } = yield (0, database_1.query)("INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4) returning *;", [id, email, hashPassword, name]);
                     res.status(200).json({
                         success: true,

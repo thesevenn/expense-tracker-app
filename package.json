@@ -5,7 +5,7 @@
 		"start": "node ./dist/index.js",
 		"dev": "nodemon index.ts",
 		"ts": "tsc --watch",
-		"test-w": "jest --watch --silent",
+		"test-w": "jest --watch",
 		"test": "jest"
 	},
 	"dependencies": {

@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 
-import verifyTokenReturnUser from "../utils/jwt/verifyJwtReturnUser";
+import verifyResfreshTokenReturnUser from "../utils/jwt/verifyJwtReturnUser";
 import generateJwt from "../utils/jwt/generateJwt";
 import {Type} from "../types/token.type";
 import {durations} from "../types/durations.type";
@@ -14,16 +14,22 @@ export default function newAccess(req: Request, res: Response) {
 				message: "token required",
 			});
 		}
-		const user: string = verifyTokenReturnUser(refreshToken);
+		const user: string = verifyResfreshTokenReturnUser(refreshToken);
 		if (user) {
 			const accessToken = generateJwt(user, {
-				type: Type.refresh,
+				type: Type.access,
 				expiresIn: durations.short,
 			});
-			res.status(200).cookie("accessToken", accessToken).json({
-				success: true,
-				message: "access provided",
-			});
+			res
+				.status(200)
+				.cookie("accessToken", accessToken, {
+					httpOnly: true,
+					maxAge: 1800000,
+				})
+				.json({
+					success: true,
+					message: "access provided",
+				});
 		}
 	} catch (error) {
 		if (error instanceof Error) {

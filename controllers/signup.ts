@@ -6,6 +6,7 @@ import User from "../types/user.type";
 import generateId from "../utils/generateId";
 import {sanitize} from "../utils/validations/sanitize";
 import {query} from "../database";
+import {Varient} from "../types/idvarient.type";
 
 export default async function signup(
 	req: Request,
@@ -39,7 +40,7 @@ export default async function signup(
 				});
 			} else {
 				const hashPassword: string = await bcrypt.hash(password, 15);
-				const id = generateId(email);
+				const id = generateId(email, Varient.full);
 				const {rows} = await query(
 					"INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4) returning *;",
 					[id, email, hashPassword, name]

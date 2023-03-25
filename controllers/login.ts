@@ -7,6 +7,7 @@ import {sanitize} from "../utils/validations/sanitize";
 import {query} from "../database";
 import generateJwt from "../utils/jwt/generateJwt";
 import {Type} from "../types/token.type";
+import {durations} from "../types/durations.type";
 
 export default async function login(req: Request, res: Response) {
 	let {email, password} = req.body;
@@ -36,18 +37,18 @@ export default async function login(req: Request, res: Response) {
 							"accessToken",
 							generateJwt(rows[0].id, {
 								type: Type.access,
-								expiresIn: "30min",
+								expiresIn: durations.short,
 							}),
 							{
 								httpOnly: true,
-								maxAge: 1000 * 60,
+								maxAge: 1000 * 60 * 30,
 							}
 						)
 						.cookie(
 							"refreshToken",
 							generateJwt(rows[0].id, {
 								type: Type.refresh,
-								expiresIn: "7days",
+								expiresIn: durations.long,
 							}),
 							{httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7}
 						)

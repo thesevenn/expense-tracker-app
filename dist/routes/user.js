@@ -1,6 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const newRecord_1 = __importDefault(require("../controllers/newRecord"));
+const verifyUserAccess_1 = __importDefault(require("../middlewares/verifyUserAccess"));
 const router = (0, express_1.Router)();
 // TODO =>
 /*
@@ -12,9 +17,10 @@ monthly summary.
 yearly summary.
 pagination for list.
 */
+router.use(verifyUserAccess_1.default);
 // POST at - /records
 // body - {amount,creditBool,userId}
-router.post("/records");
+router.post("/records", newRecord_1.default);
 // GET at - /records
 // response shape => 10-20 recent records [...{record-row}]
 router.get("/records");
