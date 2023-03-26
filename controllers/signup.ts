@@ -2,11 +2,11 @@ import {Request, Response} from "express";
 import {QueryResult} from "pg";
 import bcrypt from "bcrypt";
 
-import User from "../types/user.type";
+import User from "../types/user/user.type";
 import generateId from "../utils/generateId";
 import {sanitize} from "../utils/validations/sanitize";
 import {query} from "../database";
-import {Varient} from "../types/idvarient.type";
+import {Varient} from "../types/utils/idvarient.type";
 
 export default async function signup(
 	req: Request,

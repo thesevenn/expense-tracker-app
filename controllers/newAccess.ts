@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 
 import verifyResfreshTokenReturnUser from "../utils/jwt/verifyJwtReturnUser";
-import generateJwt from "../utils/jwt/generateJwt";
-import {Type} from "../types/token.type";
-import {durations} from "../types/durations.type";
+import signJwtToken from "../utils/jwt/signJwtToken";
+import {Token} from "../types/utils/token.type";
+import {durations} from "../types/utils/durations.type";
 
 export default function newAccess(req: Request, res: Response) {
 	const {refreshToken} = req.cookies;
@@ -16,8 +16,8 @@ export default function newAccess(req: Request, res: Response) {
 		}
 		const user: string = verifyResfreshTokenReturnUser(refreshToken);
 		if (user) {
-			const accessToken = generateJwt(user, {
-				type: Type.access,
+			const accessToken = signJwtToken(user, {
+				type: Token.access,
 				expiresIn: durations.short,
 			});
 			res

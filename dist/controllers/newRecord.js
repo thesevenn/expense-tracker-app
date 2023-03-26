@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../database");
-const idvarient_type_1 = require("../types/idvarient.type");
+const idvarient_type_1 = require("../types/utils/idvarient.type");
 const generateId_1 = __importDefault(require("../utils/generateId"));
 // TODO add auth middleware
 function newRecord(req, res) {
@@ -31,7 +31,7 @@ function newRecord(req, res) {
             else {
                 // TODO => validation on amount, credit, userId
                 const id = (0, generateId_1.default)(userId, idvarient_type_1.Varient.tiny);
-                const result = yield (0, database_1.query)("INSERT INTO records(id,amount,credit,u_id) values($!,$2,$3) returning *;", [id, amount, credit, userId]);
+                const result = yield (0, database_1.query)("INSERT INTO records(id,amount,credit,u_id) values($!,$2,$3,$4) returning *;", [id, amount, credit, userId]);
             }
         }
         catch (error) {

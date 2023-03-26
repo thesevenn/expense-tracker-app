@@ -16,7 +16,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const generateId_1 = __importDefault(require("../utils/generateId"));
 const sanitize_1 = require("../utils/validations/sanitize");
 const database_1 = require("../database");
-const idvarient_type_1 = require("../types/idvarient.type");
+const idvarient_type_1 = require("../types/utils/idvarient.type");
 function signup(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let { email, password, name } = req.body;

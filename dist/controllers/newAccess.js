@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const verifyJwtReturnUser_1 = __importDefault(require("../utils/jwt/verifyJwtReturnUser"));
-const generateJwt_1 = __importDefault(require("../utils/jwt/generateJwt"));
-const token_type_1 = require("../types/token.type");
-const durations_type_1 = require("../types/durations.type");
+const signJwtToken_1 = __importDefault(require("../utils/jwt/signJwtToken"));
+const token_type_1 = require("../types/utils/token.type");
+const durations_type_1 = require("../types/utils/durations.type");
 function newAccess(req, res) {
     const { refreshToken } = req.cookies;
     try {
@@ -18,8 +18,8 @@ function newAccess(req, res) {
         }
         const user = (0, verifyJwtReturnUser_1.default)(refreshToken);
         if (user) {
-            const accessToken = (0, generateJwt_1.default)(user, {
-                type: token_type_1.Type.access,
+            const accessToken = (0, signJwtToken_1.default)(user, {
+                type: token_type_1.Token.access,
                 expiresIn: durations_type_1.durations.short,
             });
             res

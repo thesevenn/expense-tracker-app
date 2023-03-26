@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 
 import {query} from "../database";
-import {Varient} from "../types/idvarient.type";
-import RequestWithUser from "../types/request.type";
+import {Varient} from "../types/utils/idvarient.type";
+import RequestWithUser from "../types/custom/request.type";
 import generateId from "../utils/generateId";
 
 // TODO add auth middleware
@@ -24,7 +24,7 @@ export default async function newRecord(
 			// TODO => validation on amount, credit, userId
 			const id: string = generateId(userId, Varient.tiny);
 			const result = await query(
-				"INSERT INTO records(id,amount,credit,u_id) values($!,$2,$3) returning *;",
+				"INSERT INTO records(id,amount,credit,u_id) values($!,$2,$3,$4) returning *;",
 				[id, amount, credit, userId]
 			);
 		}

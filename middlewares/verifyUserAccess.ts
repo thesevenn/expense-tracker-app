@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 import verifyTokenReturnUser from "../utils/jwt/verifyJwtReturnUser";
 import {env} from "../constants/_env";
-import RequestWithUser from "../types/request.type";
+import RequestWithUser from "../types/custom/request.type";
 
 export default async function isAuthenticated(
 	req: RequestWithUser,

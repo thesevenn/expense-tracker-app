@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const sanitize_1 = require("../utils/validations/sanitize");
 const database_1 = require("../database");
-const generateJwt_1 = __importDefault(require("../utils/jwt/generateJwt"));
-const token_type_1 = require("../types/token.type");
-const durations_type_1 = require("../types/durations.type");
+const signJwtToken_1 = __importDefault(require("../utils/jwt/signJwtToken"));
+const token_type_1 = require("../types/utils/token.type");
+const durations_type_1 = require("../types/utils/durations.type");
 function login(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let { email, password } = req.body;
@@ -42,15 +42,15 @@ function login(req, res) {
                     else if (verifyPassword && rows[0].email == email) {
                         res
                             .status(201)
-                            .cookie("accessToken", (0, generateJwt_1.default)(rows[0].id, {
-                            type: token_type_1.Type.access,
+                            .cookie("accessToken", (0, signJwtToken_1.default)(rows[0].id, {
+                            type: token_type_1.Token.access,
                             expiresIn: durations_type_1.durations.short,
                         }), {
                             httpOnly: true,
                             maxAge: 1000 * 60 * 30,
                         })
-                            .cookie("refreshToken", (0, generateJwt_1.default)(rows[0].id, {
-                            type: token_type_1.Type.refresh,
+                            .cookie("refreshToken", (0, signJwtToken_1.default)(rows[0].id, {
+                            type: token_type_1.Token.refresh,
                             expiresIn: durations_type_1.durations.long,
                         }), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
                             .cookie("user", rows[0].id, { httpOnly: true })

@@ -2,12 +2,12 @@ import {Request, Response} from "express";
 import {QueryResult} from "pg";
 import bcrypt from "bcrypt";
 
-import User from "../types/user.type";
+import User from "../types/user/user.type";
 import {sanitize} from "../utils/validations/sanitize";
 import {query} from "../database";
-import generateJwt from "../utils/jwt/generateJwt";
-import {Type} from "../types/token.type";
-import {durations} from "../types/durations.type";
+import signJwtToken from "../utils/jwt/signJwtToken";
+import {Token} from "../types/utils/token.type";
+import {durations} from "../types/utils/durations.type";
 
 export default async function login(req: Request, res: Response) {
 	let {email, password} = req.body;
@@ -35,8 +35,8 @@ export default async function login(req: Request, res: Response) {
 						.status(201)
 						.cookie(
 							"accessToken",
-							generateJwt(rows[0].id, {
-								type: Type.access,
+							signJwtToken(rows[0].id, {
+								type: Token.access,
 								expiresIn: durations.short,
 							}),
 							{
@@ -46,8 +46,8 @@ export default async function login(req: Request, res: Response) {
 						)
 						.cookie(
 							"refreshToken",
-							generateJwt(rows[0].id, {
-								type: Type.refresh,
+							signJwtToken(rows[0].id, {
+								type: Token.refresh,
 								expiresIn: durations.long,
 							}),
 							{httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7}

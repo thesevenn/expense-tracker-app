@@ -4,11 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto_1 = __importDefault(require("crypto"));
-const idvarient_type_1 = require("../types/idvarient.type");
-function generateId(target, version) {
+const idvarient_type_1 = require("../types/utils/idvarient.type");
+function generateId(target, varient) {
     const time = String(Date.now());
     const specs = ["xc", "tr", "aq", "fz", "nj", "en"];
-    if (version == idvarient_type_1.Varient.full) {
+    if (varient == idvarient_type_1.Varient.full) {
         return `
 		${specs[Math.floor(Math.random() * specs.length)] +
             time.substring(0, time.length / 2)}-${target.substring(0, 2) + time.substring(time.length / 2 + 1)}-${crypto_1.default

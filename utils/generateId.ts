@@ -1,11 +1,11 @@
 import crypto from "crypto";
 
-import {Varient} from "../types/idvarient.type";
+import {Varient} from "../types/utils/idvarient.type";
 
-export default function generateId(target: string, version: Varient): string {
+export default function generateId(target: string, varient: Varient): string {
 	const time: string = String(Date.now());
 	const specs = ["xc", "tr", "aq", "fz", "nj", "en"];
-	if (version == Varient.full) {
+	if (varient == Varient.full) {
 		return `
 		${
 			specs[Math.floor(Math.random() * specs.length)] +
