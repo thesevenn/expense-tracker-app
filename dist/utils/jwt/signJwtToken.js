@@ -6,11 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const _env_1 = require("../../constants/_env");
 const durations_type_1 = require("../../types/utils/durations.type");
-function signJwtToken(id, { type, expiresIn = durations_type_1.durations.short }) {
+function signJwtToken(id, name, { type, expiresIn = durations_type_1.durations.short }) {
     const secret = type == "access" ? _env_1.env.ACCESS_SECRET : _env_1.env.REFRESH_SECRET;
     if (secret) {
         const payload = {
             active: id,
+            name: name,
             iat: Date.now() / 1000,
         };
         const webToken = jsonwebtoken_1.default.sign(payload, secret, { expiresIn: expiresIn });

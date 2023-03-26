@@ -20,7 +20,7 @@ export default async function login(req: Request, res: Response) {
 			});
 		} else {
 			const {rows}: QueryResult<User> = await query(
-				"SELECT email,password,id FROM users WHERE email = $1",
+				"SELECT email,password,id,name FROM users WHERE email = $1",
 				[email]
 			);
 			if (rows.length) {
@@ -35,7 +35,7 @@ export default async function login(req: Request, res: Response) {
 						.status(201)
 						.cookie(
 							"accessToken",
-							signJwtToken(rows[0].id, {
+							signJwtToken(rows[0].id, rows[0].name, {
 								type: Token.access,
 								expiresIn: durations.short,
 							}),
@@ -46,7 +46,7 @@ export default async function login(req: Request, res: Response) {
 						)
 						.cookie(
 							"refreshToken",
-							signJwtToken(rows[0].id, {
+							signJwtToken(rows[0].id, rows[0].name, {
 								type: Token.refresh,
 								expiresIn: durations.long,
 							}),
@@ -56,7 +56,8 @@ export default async function login(req: Request, res: Response) {
 						.json({
 							success: true,
 							auth: true,
-							message: "login successfully as: " + rows[0].email,
+							user: rows[0].name,
+							message: "login successfully as: " + rows[0].name,
 						});
 				}
 			} else {

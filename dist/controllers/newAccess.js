@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const verifyJwtReturnUser_1 = __importDefault(require("../utils/jwt/verifyJwtReturnUser"));
+const verifyJwtToken_1 = __importDefault(require("../utils/jwt/verifyJwtToken"));
 const signJwtToken_1 = __importDefault(require("../utils/jwt/signJwtToken"));
 const token_type_1 = require("../types/utils/token.type");
 const durations_type_1 = require("../types/utils/durations.type");
@@ -16,9 +16,9 @@ function newAccess(req, res) {
                 message: "token required",
             });
         }
-        const { user, expired, invalid } = (0, verifyJwtReturnUser_1.default)(refreshToken);
-        if (user && !expired && !invalid) {
-            const accessToken = (0, signJwtToken_1.default)(user, {
+        const { user, name, expired, invalid } = (0, verifyJwtToken_1.default)(refreshToken, token_type_1.Token.refresh);
+        if (user && name && !expired && !invalid) {
+            const accessToken = (0, signJwtToken_1.default)(user, name, {
                 type: token_type_1.Token.access,
                 expiresIn: durations_type_1.durations.short,
             });

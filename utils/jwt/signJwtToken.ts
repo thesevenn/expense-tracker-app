@@ -12,12 +12,14 @@ interface options {
 
 export default function signJwtToken(
 	id: string,
+	name: string,
 	{type, expiresIn = durations.short}: options
 ): string | boolean {
 	const secret = type == "access" ? env.ACCESS_SECRET : env.REFRESH_SECRET;
 	if (secret) {
 		const payload: Payload = {
 			active: id,
+			name: name,
 			iat: Date.now() / 1000,
 		};
 		const webToken = jwt.sign(payload, secret, {expiresIn: expiresIn});

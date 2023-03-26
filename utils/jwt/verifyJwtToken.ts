@@ -4,16 +4,6 @@ import {env} from "../../constants/_env";
 import Decoded from "../../types/utils/decoded.type";
 import {Token} from "../../types/utils/token.type";
 
-function verifyRefreshTokenReturnUser(token: string): string {
-	if (env.REFRESH_SECRET) {
-		const payload = jwt.verify(token, env.REFRESH_SECRET);
-		if (payload instanceof Object) {
-			return payload.active;
-		}
-	}
-	return "";
-}
-
 export default function verifyJwtToken(
 	token: string,
 	type: Token = Token.access
@@ -24,6 +14,7 @@ export default function verifyJwtToken(
 		invalid: true,
 		expired: true,
 		user: null,
+		name: null,
 		error: null,
 	};
 	try {
@@ -31,6 +22,7 @@ export default function verifyJwtToken(
 			const verifiedPayload: string | JwtPayload = jwt.verify(token, secret);
 			if (verifiedPayload instanceof Object && verifiedPayload.active) {
 				decoded.user = verifiedPayload.active;
+				decoded.name = verifiedPayload.name;
 				decoded.expired = false;
 				decoded.invalid = false;
 			}

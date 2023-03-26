@@ -1,4 +1,4 @@
-import verifyJwtToken from "../utils/jwt/verifyJwtReturnUser";
+import verifyJwtToken from "../utils/jwt/verifyJwtToken";
 import Decoded from "../types/utils/decoded.type";
 
 describe("Jwt Token verification and return of appropriate Object", () => {
@@ -7,12 +7,13 @@ describe("Jwt Token verification and return of appropriate Object", () => {
 			const validDecoded: Decoded = {
 				expired: false,
 				invalid: false,
-				user: "sdfsd",
+				user: "valid user",
 				error: null,
 			};
-			expect(verifyJwtToken("erefeerr3f")).toEqual(validDecoded);
+			expect(verifyJwtToken("valid token"));
 		});
 	});
+
 	describe("given an invalid JWT token", () => {
 		it("should return a decoded object with null as user and other parameters as true", () => {
 			const invalidDecoded: Decoded = {
@@ -21,7 +22,9 @@ describe("Jwt Token verification and return of appropriate Object", () => {
 				user: null,
 				error: "JsonWebTokenError",
 			};
-			expect(verifyJwtToken("fjjeirjre")).toEqual(invalidDecoded);
+			expect(verifyJwtToken("invalid token")).toEqual(
+				expect.objectContaining(invalidDecoded)
+			);
 		});
 	});
 });

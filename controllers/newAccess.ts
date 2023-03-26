@@ -1,10 +1,9 @@
 import {Request, Response} from "express";
 
-import verifyJwtToken from "../utils/jwt/verifyJwtReturnUser";
+import verifyJwtToken from "../utils/jwt/verifyJwtToken";
 import signJwtToken from "../utils/jwt/signJwtToken";
 import {Token} from "../types/utils/token.type";
 import {durations} from "../types/utils/durations.type";
-import Decoded from "../types/utils/decoded.type";
 
 export default function newAccess(req: Request, res: Response) {
 	const {refreshToken} = req.cookies;
@@ -15,9 +14,12 @@ export default function newAccess(req: Request, res: Response) {
 				message: "token required",
 			});
 		}
-		const {user, expired, invalid} = verifyJwtToken(refreshToken);
-		if (user && !expired && !invalid) {
-			const accessToken = signJwtToken(user, {
+		const {user, name, expired, invalid} = verifyJwtToken(
+			refreshToken,
+			Token.refresh
+		);
+		if (user && name && !expired && !invalid) {
+			const accessToken = signJwtToken(user, name, {
 				type: Token.access,
 				expiresIn: durations.short,
 			});

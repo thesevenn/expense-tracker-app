@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../database");
 const idvarient_type_1 = require("../types/utils/idvarient.type");
 const generateId_1 = __importDefault(require("../utils/generateId"));
-// TODO add auth middleware
+// TODO add auth middleware done
 function newRecord(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { amount, credit, userId } = req.body;

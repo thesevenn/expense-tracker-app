@@ -30,7 +30,7 @@ function login(req, res) {
                 });
             }
             else {
-                const { rows } = yield (0, database_1.query)("SELECT email,password,id FROM users WHERE email = $1", [email]);
+                const { rows } = yield (0, database_1.query)("SELECT email,password,id,name FROM users WHERE email = $1", [email]);
                 if (rows.length) {
                     const verifyPassword = yield bcrypt_1.default.compare(password, rows[0].password);
                     if (!verifyPassword) {
@@ -42,14 +42,14 @@ function login(req, res) {
                     else if (verifyPassword && rows[0].email == email) {
                         res
                             .status(201)
-                            .cookie("accessToken", (0, signJwtToken_1.default)(rows[0].id, {
+                            .cookie("accessToken", (0, signJwtToken_1.default)(rows[0].id, rows[0].name, {
                             type: token_type_1.Token.access,
                             expiresIn: durations_type_1.durations.short,
                         }), {
                             httpOnly: true,
                             maxAge: 1000 * 60 * 30,
                         })
-                            .cookie("refreshToken", (0, signJwtToken_1.default)(rows[0].id, {
+                            .cookie("refreshToken", (0, signJwtToken_1.default)(rows[0].id, rows[0].name, {
                             type: token_type_1.Token.refresh,
                             expiresIn: durations_type_1.durations.long,
                         }), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
@@ -57,7 +57,8 @@ function login(req, res) {
                             .json({
                             success: true,
                             auth: true,
-                            message: "login successfully as: " + rows[0].email,
+                            user: rows[0].name,
+                            message: "login successfully as: " + rows[0].name,
                         });
                     }
                 }

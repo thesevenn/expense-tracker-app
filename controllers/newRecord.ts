@@ -5,7 +5,7 @@ import {Varient} from "../types/utils/idvarient.type";
 import RequestWithUser from "../types/custom/request.type";
 import generateId from "../utils/generateId";
 
-// TODO add auth middleware
+// TODO add auth middleware done
 export default async function newRecord(
 	req: RequestWithUser,
 	res: Response
@@ -13,7 +13,6 @@ export default async function newRecord(
 	const {amount, credit, userId} = req.body;
 	// TODO => sanitize
 	const {user} = req;
-
 	try {
 		if (!amount || !credit || !userId) {
 			res.status(400).json({

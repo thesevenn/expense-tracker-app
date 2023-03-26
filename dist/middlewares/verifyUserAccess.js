@@ -12,28 +12,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const _env_1 = require("../constants/_env");
+const verifyJwtToken_1 = __importDefault(require("../utils/jwt/verifyJwtToken"));
+const token_type_1 = require("../types/utils/token.type");
 function isAuthenticated(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { accessToken } = req.cookies;
         try {
             if (!accessToken) {
-                res.send("not found");
+                res.status(401).json({
+                    success: false,
+                    auth: false,
+                    message: "Not Authorized",
+                });
             }
             else if (accessToken) {
-                if (_env_1.env.ACCESS_SECRET) {
-                    const verify = jsonwebtoken_1.default.verify(accessToken, _env_1.env.ACCESS_SECRET);
-                    if (verify instanceof Object && verify.active) {
-                        req.user = verify.active;
-                    }
+                const { user, invalid, expired } = (0, verifyJwtToken_1.default)(accessToken, token_type_1.Token.access);
+                if (user && !invalid && !expired) {
+                    req.user = user;
                     res.send("ok");
+                    next();
+                }
+                else if (invalid || expired) {
+                    res.status(401).json({
+                        success: false,
+                        auth: false,
+                        message: "Token is not valid or expired",
+                    });
                 }
             }
-            console.log(accessToken);
-            next();
         }
-        catch (error) { }
+        catch (error) {
+            if (error instanceof Error && error.name == "JsonWebTokenError") {
+                res.status(401).json({
+                    success: false,
+                    auth: false,
+                    message: "Invalid Credentials",
+                });
+            }
+            else {
+                res.status(503).json({
+                    success: false,
+                    auth: false,
+                    message: "An error occured on our side, try again later.",
+                });
+            }
+        }
     });
 }
 exports.default = isAuthenticated;
