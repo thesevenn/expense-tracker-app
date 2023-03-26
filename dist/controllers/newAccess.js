@@ -16,8 +16,8 @@ function newAccess(req, res) {
                 message: "token required",
             });
         }
-        const user = (0, verifyJwtReturnUser_1.default)(refreshToken);
-        if (user) {
+        const { user, expired, invalid } = (0, verifyJwtReturnUser_1.default)(refreshToken);
+        if (user && !expired && !invalid) {
             const accessToken = (0, signJwtToken_1.default)(user, {
                 type: token_type_1.Token.access,
                 expiresIn: durations_type_1.durations.short,

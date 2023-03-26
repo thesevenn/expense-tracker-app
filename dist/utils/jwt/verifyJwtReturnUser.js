@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyJwtToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const _env_1 = require("../../constants/_env");
 const token_type_1 = require("../../types/utils/token.type");
@@ -16,7 +15,6 @@ function verifyRefreshTokenReturnUser(token) {
     }
     return "";
 }
-exports.default = verifyRefreshTokenReturnUser;
 function verifyJwtToken(token, type = token_type_1.Token.access) {
     const secret = type == "access" ? _env_1.env.ACCESS_SECRET : _env_1.env.REFRESH_SECRET;
     const decoded = {
@@ -42,4 +40,4 @@ function verifyJwtToken(token, type = token_type_1.Token.access) {
     }
     return decoded;
 }
-exports.verifyJwtToken = verifyJwtToken;
+exports.default = verifyJwtToken;

@@ -1,4 +1,4 @@
-import {verifyJwtToken} from "../utils/jwt/verifyJwtReturnUser";
+import verifyJwtToken from "../utils/jwt/verifyJwtReturnUser";
 import Decoded from "../types/utils/decoded.type";
 
 describe("Jwt Token verification and return of appropriate Object", () => {

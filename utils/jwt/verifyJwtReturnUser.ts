@@ -4,7 +4,7 @@ import {env} from "../../constants/_env";
 import Decoded from "../../types/utils/decoded.type";
 import {Token} from "../../types/utils/token.type";
 
-export default function verifyRefreshTokenReturnUser(token: string): string {
+function verifyRefreshTokenReturnUser(token: string): string {
 	if (env.REFRESH_SECRET) {
 		const payload = jwt.verify(token, env.REFRESH_SECRET);
 		if (payload instanceof Object) {
@@ -14,7 +14,7 @@ export default function verifyRefreshTokenReturnUser(token: string): string {
 	return "";
 }
 
-export function verifyJwtToken(
+export default function verifyJwtToken(
 	token: string,
 	type: Token = Token.access
 ): Decoded {
