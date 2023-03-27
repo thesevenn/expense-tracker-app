@@ -15,7 +15,7 @@ export default async function signup(
 	let {email, password, name} = req.body;
 	email = sanitize(email);
 	password = sanitize(password);
-	name = sanitize(name);
+	name = sanitize(name).toLowerCase();
 	try {
 		if (!name) {
 			res.status(400).json({

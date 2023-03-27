@@ -26,10 +26,10 @@ function isAuthenticated(req, res, next) {
                 });
             }
             else if (accessToken) {
-                const { user, invalid, expired } = (0, verifyJwtToken_1.default)(accessToken, token_type_1.Token.access);
-                if (user && !invalid && !expired) {
+                const { user, invalid, expired, name } = (0, verifyJwtToken_1.default)(accessToken, token_type_1.Token.access);
+                if (user && name && !invalid && !expired) {
                     req.user = user;
-                    res.send("ok");
+                    req.name = name;
                     next();
                 }
                 else if (invalid || expired) {

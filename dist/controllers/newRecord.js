@@ -15,28 +15,40 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../database");
 const idvarient_type_1 = require("../types/utils/idvarient.type");
 const generateId_1 = __importDefault(require("../utils/generateId"));
+const sanitize_1 = require("../utils/validations/sanitize");
 // TODO add auth middleware done
 function newRecord(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { amount, credit, userId } = req.body;
-        // TODO => sanitize
-        const { user } = req;
+        let { amount, credit } = req.body;
+        const { user, name } = req;
+        if (!amount || !credit) {
+            res.status(400).json({
+                success: false,
+                message: "Required fields cannot be empty",
+            });
+        }
         try {
-            if (!amount || !credit || !userId) {
-                res.status(400).json({
-                    success: false,
-                    message: "Required fields cannot be empty",
+            // TODO => validation on amount, credit, userId
+            if (user) {
+                amount = parseFloat((0, sanitize_1.sanitize)(amount));
+                credit = (0, sanitize_1.sanitize)(credit);
+                console.log(amount, credit);
+                const id = (0, generateId_1.default)(name, idvarient_type_1.Varient.tiny);
+                const result = yield (0, database_1.query)("INSERT INTO records(id,amount,credit,u_id) values($1,$2,$3,$4) returning *;", [id, amount, credit, user]);
+                res.status(200).json({
+                    success: true,
+                    record: result.rows[0],
                 });
-            }
-            else {
-                // TODO => validation on amount, credit, userId
-                const id = (0, generateId_1.default)(userId, idvarient_type_1.Varient.tiny);
-                const result = yield (0, database_1.query)("INSERT INTO records(id,amount,credit,u_id) values($!,$2,$3,$4) returning *;", [id, amount, credit, userId]);
             }
         }
         catch (error) {
-            if (error instanceof Error)
+            if (error instanceof Error) {
                 console.log(error.message);
+                res.status(503).json({
+                    success: false,
+                    message: "An error occured on our side, try again later",
+                });
+            }
         }
     });
 }

@@ -18,13 +18,13 @@ export default async function isAuthenticated(
 				message: "Not Authorized",
 			});
 		} else if (accessToken) {
-			const {user, invalid, expired} = verifyJwtToken(
+			const {user, invalid, expired, name} = verifyJwtToken(
 				accessToken,
 				Token.access
 			);
-			if (user && !invalid && !expired) {
+			if (user && name && !invalid && !expired) {
 				req.user = user;
-				res.send("ok");
+				req.name = name;
 				next();
 			} else if (invalid || expired) {
 				res.status(401).json({

@@ -1,7 +1,7 @@
 import {Router} from "express";
 
 import newRecord from "../controllers/newRecord";
-import isAuthenticated from "../middlewares/verifyUserAccess";
+import verifyUserAccess from "../middlewares/verifyUserAccess";
 
 const router: Router = Router();
 
@@ -15,7 +15,10 @@ monthly summary.
 yearly summary.
 pagination for list.
 */
-router.use(isAuthenticated);
+
+// auth middleware
+router.use(verifyUserAccess);
+
 // POST at - /records
 // body - {amount,creditBool,userId}
 router.post("/records", newRecord);

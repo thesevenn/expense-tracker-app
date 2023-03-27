@@ -22,7 +22,7 @@ function signup(req, res) {
         let { email, password, name } = req.body;
         email = (0, sanitize_1.sanitize)(email);
         password = (0, sanitize_1.sanitize)(password);
-        name = (0, sanitize_1.sanitize)(name);
+        name = (0, sanitize_1.sanitize)(name).toLowerCase();
         try {
             if (!name) {
                 res.status(400).json({

@@ -17,6 +17,7 @@ monthly summary.
 yearly summary.
 pagination for list.
 */
+// auth middleware
 router.use(verifyUserAccess_1.default);
 // POST at - /records
 // body - {amount,creditBool,userId}
