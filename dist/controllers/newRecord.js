@@ -16,6 +16,7 @@ const database_1 = require("../database");
 const idvarient_type_1 = require("../types/utils/idvarient.type");
 const generateId_1 = __importDefault(require("../utils/generateId"));
 const sanitize_1 = require("../utils/validations/sanitize");
+const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 // TODO add auth middleware done
 function newRecord(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -29,7 +30,7 @@ function newRecord(req, res) {
         }
         try {
             // TODO => validation on amount, credit, userId
-            if (user) {
+            if (user && (yield (0, verifyUser_1.default)(user))) {
                 amount = parseFloat((0, sanitize_1.sanitize)(amount));
                 credit = (0, sanitize_1.sanitize)(credit);
                 console.log(amount, credit);

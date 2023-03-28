@@ -5,6 +5,7 @@ import {Varient} from "../types/utils/idvarient.type";
 import RequestWithUser from "../types/custom/request.type";
 import generateId from "../utils/generateId";
 import {sanitize} from "../utils/validations/sanitize";
+import isValidUser from "../utils/verifyUser";
 
 // TODO add auth middleware done
 export default async function newRecord(
@@ -21,7 +22,7 @@ export default async function newRecord(
 	}
 	try {
 		// TODO => validation on amount, credit, userId
-		if (user) {
+		if (user && (await isValidUser(user))) {
 			amount = parseFloat(sanitize(amount));
 			credit = sanitize(credit);
 			console.log(amount, credit);
