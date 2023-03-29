@@ -41,9 +41,16 @@ export default async function signup(
 			} else {
 				const hashPassword: string = await bcrypt.hash(password, 15);
 				const id = generateId(email, Varient.full);
-				const {rows} = await query(
-					"INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4) returning *;",
+				await query(
+					"INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4);",
 					[id, email, hashPassword, name]
+				);
+
+				// create summary for first time
+				const summaryId = generateId(name, Varient.tiny);
+				await query(
+					"INSERT INTO summary(id,debited,credited,u_id) values($1,$2,$3,$4);",
+					[summaryId, "0.00", "0.00", id]
 				);
 
 				res.status(200).json({

@@ -12,7 +12,7 @@ CREATE DATABASE finances;
 
         CREATE TABLE records(
             id VARCHAR(100) PRIMARY KEY,
-            amount NUMERIC(10,3),
+            amount NUMERIC(10,3) NOT NULL,
             credit BOOLEAN DEFAULT FALSE,
             u_id VARCHAR(100),
             time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -24,8 +24,8 @@ CREATE DATABASE finances;
 
     CREATE TABLE summary(
        id VARCHAR(100) PRIMARY KEY,
-	   expense NUMERIC(10,2),
-	   earn NUMERIC(10,2),
+	   debited NUMERIC(10,2),
+	   credited NUMERIC(10,2), 
        last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	   u_id VARCHAR(100),
 	   CONSTRAINT fk_u_id 

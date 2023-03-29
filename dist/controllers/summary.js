@@ -17,8 +17,29 @@ const database_1 = require("../database");
 function summary(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { user, name } = req;
-        if (user && (yield (0, verifyUser_1.default)(user))) {
-            const { rows } = yield (0, database_1.query)("SELECT ");
+        try {
+            if (user && (yield (0, verifyUser_1.default)(user))) {
+                const summary = yield (0, database_1.query)("SELECT * FROM summary WHERE u_id=$1", [user]);
+                res.status(200).json({
+                    success: true,
+                    summary: summary.rows[0],
+                    user: name,
+                });
+            }
+            else {
+                res.status(404).json({
+                    success: false,
+                    message: "Cannot find what you are looking for",
+                });
+            }
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                res.status(403).json({
+                    success: false,
+                    message: "An error occured on Our side, try again later",
+                });
+            }
         }
     });
 }

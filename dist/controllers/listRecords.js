@@ -16,7 +16,7 @@ const database_1 = require("../database");
 const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 function listRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { user, name } = req;
+        const { user } = req;
         if (user && (yield (0, verifyUser_1.default)(user))) {
             const { rows } = yield (0, database_1.query)("SELECT * FROM records WHERE u_id=$1 ORDER BY added_at DESC", [user]);
             res.status(200).json({

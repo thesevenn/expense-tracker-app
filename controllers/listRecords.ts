@@ -9,7 +9,7 @@ export default async function listRecords(
 	req: RequestWithUser,
 	res: Response
 ): Promise<void> {
-	const {user, name} = req;
+	const {user} = req;
 	if (user && (await isValidUser(user))) {
 		const {rows}: QueryResult = await query(
 			"SELECT * FROM records WHERE u_id=$1 ORDER BY added_at DESC",

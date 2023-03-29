@@ -47,7 +47,10 @@ function signup(req, res) {
                 else {
                     const hashPassword = yield bcrypt_1.default.hash(password, 15);
                     const id = (0, generateId_1.default)(email, idvarient_type_1.Varient.full);
-                    const { rows } = yield (0, database_1.query)("INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4) returning *;", [id, email, hashPassword, name]);
+                    yield (0, database_1.query)("INSERT INTO users (id,email,password,name) values ($1,$2,$3,$4);", [id, email, hashPassword, name]);
+                    // create summary for first time
+                    const summaryId = (0, generateId_1.default)(name, idvarient_type_1.Varient.tiny);
+                    yield (0, database_1.query)("INSERT INTO summary(id,debited,credited,u_id) values($1,$2,$3,$4);", [summaryId, "0.00", "0.00", id]);
                     res.status(200).json({
                         success: true,
                         message: "user registerd succesfully.",
