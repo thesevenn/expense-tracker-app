@@ -14,19 +14,52 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../database");
 const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
+const createQuery_1 = __importDefault(require("../database/createQuery"));
 function listRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { user } = req;
-        if (user && (yield (0, verifyUser_1.default)(user))) {
-            const { rows } = yield (0, database_1.query)("SELECT * FROM records WHERE u_id=$1 ORDER BY added_at DESC", [user]);
-            res.status(200).json({
-                success: true,
-                records: rows,
-            });
+        const userQueries = req.query;
+        try {
+            const date = new Date();
+            const page = userQueries.page || "1";
+            const count = userQueries.count || "10";
+            const offset = "" + (parseInt(page) - 1) * parseInt(count);
+            if (user && (yield (0, verifyUser_1.default)(user))) {
+                let records;
+                if (userQueries.month) {
+                    const date = new Date();
+                    const year = (userQueries.year || date.getFullYear());
+                    const month = userQueries.month;
+                    const fetchQuery = (0, createQuery_1.default)({ month, year });
+                    records = yield (0, database_1.query)(fetchQuery, [user, year, month, offset, count]);
+                }
+                else if (userQueries.year && !userQueries.month) {
+                    const year = userQueries.year;
+                    const fetchQuery = (0, createQuery_1.default)({ year });
+                    records = yield (0, database_1.query)(fetchQuery, [user, year, offset, count]);
+                }
+                else {
+                    const fetchQuery = (0, createQuery_1.default)();
+                    records = yield (0, database_1.query)(fetchQuery, [user, offset, count]);
+                }
+                res.status(200).json({
+                    success: true,
+                    total: records.rowCount,
+                    records: records.rows,
+                });
+            }
+        }
+        catch (error) {
+            console.log(error);
+            res.send("not ok");
         }
     });
 }
 exports.default = listRecords;
+/*
+
+"SELECT * FROM records WHERE u_id=$1 ORDER BY added_at DESC OFFSET $2 ROWS FETCH NEXT $1 ROWS ONLY"
+*/
 /*
 for every year -> query of month;
 if no year provided month are of current year
