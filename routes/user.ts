@@ -1,7 +1,9 @@
 import {Router} from "express";
 
-import newRecord from "../controllers/newRecord";
 import verifyUserAccess from "../middlewares/verifyUserAccess";
+import newRecord from "../controllers/newRecord";
+import listRecords from "../controllers/listRecords";
+import summary from "../controllers/summary";
 
 const router: Router = Router();
 
@@ -21,15 +23,15 @@ router.use(verifyUserAccess);
 
 // POST at - /records
 // body - {amount,creditBool,userId}
-router.post("/records", newRecord);
+router.route("/records").post(newRecord).get(listRecords);
 
 // GET at - /records
 // response shape => 10-20 recent records [...{record-row}]
-router.get("/records");
+// router.get("/records", listRecords);
 
 // GET at - /summary
 // response shape => {summary-row}
-router.get("/summary");
+router.get("/summary", summary);
 
 //
 

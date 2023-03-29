@@ -12,24 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 const database_1 = require("../database");
-function summary(req, res) {
+const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
+function listRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { user, name } = req;
         if (user && (yield (0, verifyUser_1.default)(user))) {
-            const { rows } = yield (0, database_1.query)("SELECT ");
+            const { rows } = yield (0, database_1.query)("SELECT * FROM records WHERE u_id=$1 ORDER BY added_at DESC", [user]);
+            res.status(200).json({
+                success: true,
+                records: rows,
+            });
         }
     });
 }
-exports.default = summary;
+exports.default = listRecords;
 /*
-updated_on field - updates on every update of summary route .
-check if update has been done in last 7 new records
-
-if not, select entries from records after the time of last update and them to summary to update the summary table
-else return the summary as it is.
-
-opt 1 - use last added records count or once per day.
-
+for every year -> query of month;
+if no year provided month are of current year
+filter for month and year with query and asc or desc
+pagination for 10-20 records per req.
 */

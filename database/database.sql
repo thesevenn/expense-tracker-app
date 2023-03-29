@@ -23,13 +23,15 @@ CREATE DATABASE finances;
         );
 
     CREATE TABLE summary(
-       id VARCHAR(50) PRIMARY KEY,
-	   expense NUMERIC(10,3),
-	   earn NUMERIC(10,3),
-	   u_id VARCHAR(50),
-	   CONSTRAINT fk_user
-	   FOREIGN KEY(u_id)
-	   REFERENCES users(id)
+       id VARCHAR(100) PRIMARY KEY,
+	   expense NUMERIC(10,2),
+	   earn NUMERIC(10,2),
+       last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	   u_id VARCHAR(100),
+	   CONSTRAINT fk_u_id 
+                FOREIGN KEY(u_id) 
+                    REFERENCES users(id)
+                        ON DELETE CASCADE
     )
 
 -- create new expense => day 1 to day 30 (1 month) if want month select * from expense where id = "" AND month = may
