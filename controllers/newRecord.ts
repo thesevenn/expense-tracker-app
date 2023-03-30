@@ -7,6 +7,8 @@ import generateId from "../utils/generateId";
 import {sanitize} from "../utils/validations/sanitize";
 import isValidUser from "../utils/verifyUser";
 import parseBoolean from "../utils/parseBoolean";
+import {Messages, ServerMessages} from "../types/messages/message.type";
+import responseMessage from "../utils/errorResponse";
 
 // TODO add auth middleware done
 export default async function newRecord(
@@ -18,10 +20,7 @@ export default async function newRecord(
 
 	const {user, name} = req;
 	if (!amount || !credit) {
-		res.status(400).json({
-			success: false,
-			message: "Required fields cannot be empty",
-		});
+		res.status(400).json(responseMessage({message: Messages.required_field}));
 	}
 
 	try {
@@ -63,10 +62,9 @@ export default async function newRecord(
 	} catch (error) {
 		if (error instanceof Error) {
 			console.log(error.message);
-			res.status(503).json({
-				success: false,
-				message: "An error occured on our side, try again later",
-			});
+			res
+				.status(503)
+				.json(responseMessage({message: ServerMessages.service_unavailable}));
 		}
 	}
 }

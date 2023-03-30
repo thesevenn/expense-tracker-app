@@ -7,6 +7,8 @@ import generateId from "../utils/generateId";
 import {sanitize} from "../utils/validations/sanitize";
 import {query} from "../database";
 import {Varient} from "../types/utils/idvarient.type";
+import responseMessage from "../utils/errorResponse";
+import {Messages, ServerMessages} from "../types/messages/message.type";
 
 export default async function signup(
 	req: Request,
@@ -18,26 +20,21 @@ export default async function signup(
 	name = sanitize(name).toLowerCase();
 	try {
 		if (!name) {
-			res.status(400).json({
-				success: false,
-				message: "everyone has a name, please tell us yours",
-			});
+			res.status(400).json(responseMessage({message: Messages.name_required}));
 		}
 		if (!email || !password) {
-			res.status(400).json({
-				success: false,
-				message: "email and password fields cannot be empty",
-			});
+			res
+				.status(400)
+				.json(responseMessage({message: Messages.fields_cannot_empty}));
 		} else {
 			const {rows}: QueryResult<Array<User>> = await query(
 				"SELECT * FROM users WHERE email= $1;",
 				[email]
 			);
 			if (rows.length) {
-				res.status(400).json({
-					success: false,
-					message: "email already in use",
-				});
+				res
+					.status(400)
+					.json(responseMessage({message: Messages.account_already_exists}));
 			} else {
 				const hashPassword: string = await bcrypt.hash(password, 15);
 				const id = generateId(email, Varient.full);
@@ -53,19 +50,22 @@ export default async function signup(
 					[summaryId, "0.00", "0.00", id]
 				);
 
-				res.status(200).json({
-					success: true,
-					message: "user registerd succesfully.",
-				});
+				res
+					.status(200)
+					.json(
+						responseMessage({
+							message: Messages.registerd_success,
+							success: true,
+						})
+					);
 			}
 		}
 	} catch (error) {
 		if (error instanceof Error) {
 			console.log(error.message);
-			res.status(503).json({
-				success: false,
-				message: "An error occured on our side try again later.",
-			});
+			res
+				.status(503)
+				.json(responseMessage({message: ServerMessages.service_unavailable}));
 		}
 	}
 }

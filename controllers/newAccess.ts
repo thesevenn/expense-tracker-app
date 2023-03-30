@@ -4,15 +4,14 @@ import verifyJwtToken from "../utils/jwt/verifyJwtToken";
 import signJwtToken from "../utils/jwt/signJwtToken";
 import {Token} from "../types/utils/token.type";
 import {durations} from "../types/utils/durations.type";
+import responseMessage from "../utils/errorResponse";
+import {Messages, ServerMessages} from "../types/messages/message.type";
 
 export default function newAccess(req: Request, res: Response) {
 	const {refreshToken} = req.cookies;
 	try {
 		if (!refreshToken) {
-			res.status(400).json({
-				success: false,
-				message: "token required",
-			});
+			res.status(400).json(responseMessage({message: Messages.token_required}));
 		}
 		const {user, name, expired, invalid} = verifyJwtToken(
 			refreshToken,
@@ -31,22 +30,28 @@ export default function newAccess(req: Request, res: Response) {
 				})
 				.json({
 					success: true,
-					message: "access provided",
+					message: Messages.access_granted,
 				});
+		} else {
+			res.status(401).clearCookie("refreshToken").json({
+				success: false,
+				auth: false,
+				message: Messages.token_expired,
+			});
 		}
 	} catch (error) {
+		console.log(error instanceof Error);
 		if (error instanceof Error) {
 			if (error.name == "JsonWebTokenError") {
 				res.status(401).clearCookie("refreshToken").json({
 					success: false,
 					auth: false,
-					message: "refresh token is invalid",
+					message: Messages.token_expired,
 				});
 			} else {
-				res.status(503).json({
-					success: false,
-					message: "An error occured on our side, try again later.",
-				});
+				res
+					.status(503)
+					.json(responseMessage({message: ServerMessages.service_unavailable}));
 			}
 		}
 	}

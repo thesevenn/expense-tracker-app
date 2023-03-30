@@ -4,6 +4,8 @@ import {QueryResult} from "pg";
 import RequestWithUser from "../types/custom/request.type";
 import {query} from "../database";
 import isValidUser from "../utils/verifyUser";
+import {Messages, ServerMessages} from "../types/messages/message.type";
+import responseMessage from "../utils/errorResponse";
 
 export default async function removeAccount(
 	req: RequestWithUser,
@@ -21,28 +23,24 @@ export default async function removeAccount(
 					.clearCookie("accessToken")
 					.clearCookie("refreshToken")
 					.clearCookie("user")
-					.json({
-						success: true,
-						message:
-							name +
-							", Your account has been deleted and all the associated data will be removed from our servers.",
-						quote: "It's sad we are loosing you.",
-					});
+					.json(
+						responseMessage({
+							message: Messages.account_deleted,
+							success: true,
+							quote: "It's sad that we are loosing you!",
+						})
+					);
 			}
 		} else {
-			res.status(401).json({
-				success: false,
-				message: "You are not authorized to perform this action",
-			});
+			res
+				.status(401)
+				.json(responseMessage({message: Messages.not_authenticated}));
 		}
 	} catch (error) {
 		if (error instanceof Error) {
-			console.log(error);
-
-			res.status(503).json({
-				success: false,
-				message: "An error occured on our side, try again later.",
-			});
+			res
+				.status(503)
+				.json(responseMessage({message: ServerMessages.service_unavailable}));
 		}
 	}
 }

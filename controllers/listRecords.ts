@@ -5,6 +5,8 @@ import RequestWithUser from "../types/custom/request.type";
 import {query} from "../database";
 import isValidUser from "../utils/verifyUser";
 import createQuery from "../database/createQuery";
+import {Messages, ServerMessages} from "../types/messages/message.type";
+import responseMessage from "../utils/errorResponse";
 
 export default async function listRecords(
 	req: RequestWithUser,
@@ -13,7 +15,6 @@ export default async function listRecords(
 	const {user} = req;
 	const userQueries = req.query;
 	try {
-		const date = new Date();
 		const page = (userQueries.page as string) || "1";
 		const count = (userQueries.count as string) || "10";
 
@@ -41,12 +42,13 @@ export default async function listRecords(
 				total: records.rowCount,
 				records: records.rows,
 			});
+		} else {
+			res.status(404).json(responseMessage({message: Messages.not_found}));
 		}
 	} catch (error) {
 		console.log(error);
-		res.status(503).json({
-			succcess: false,
-			message: "An error occured on our side, try again later.",
-		});
+		res
+			.status(503)
+			.json(responseMessage({message: ServerMessages.service_unavailable}));
 	}
 }
