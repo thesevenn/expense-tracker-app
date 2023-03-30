@@ -4,6 +4,7 @@ import verifyUserAccess from "../middlewares/verifyUserAccess";
 import newRecord from "../controllers/newRecord";
 import listRecords from "../controllers/listRecords";
 import summary from "../controllers/summary";
+import removeAccount from "../controllers/removeAccount";
 
 const router: Router = Router();
 
@@ -33,6 +34,7 @@ router.route("/records").post(newRecord).get(listRecords);
 // response shape => {summary-row}
 router.get("/summary", summary);
 
+router.delete("/account", removeAccount);
 //
 
 export default router;

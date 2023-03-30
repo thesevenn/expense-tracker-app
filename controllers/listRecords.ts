@@ -44,16 +44,9 @@ export default async function listRecords(
 		}
 	} catch (error) {
 		console.log(error);
-		res.send("not ok");
+		res.status(503).json({
+			succcess: false,
+			message: "An error occured on our side, try again later.",
+		});
 	}
 }
-/*
-
-"SELECT * FROM records WHERE u_id=$1 ORDER BY added_at DESC OFFSET $2 ROWS FETCH NEXT $1 ROWS ONLY" 
-*/
-/* 
-for every year -> query of month;
-if no year provided month are of current year 
-filter for month and year with query and asc or desc
-pagination for 10-20 records per req.
-*/
