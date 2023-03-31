@@ -43,7 +43,9 @@ export default async function listRecords(
 				records: records.rows,
 			});
 		} else {
-			res.status(404).json(responseMessage({message: Messages.not_found}));
+			res
+				.status(401)
+				.json(responseMessage({message: Messages.not_authenticated}));
 		}
 	} catch (error) {
 		console.log(error);

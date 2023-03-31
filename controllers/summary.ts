@@ -24,12 +24,14 @@ export default async function summary(
 				user: name,
 			});
 		} else {
-			res.status(404).json(responseMessage({message: Messages.not_found}));
+			res
+				.status(401)
+				.json(responseMessage({message: Messages.not_authenticated}));
 		}
 	} catch (error) {
 		if (error instanceof Error) {
 			res
-				.status(403)
+				.status(503)
 				.json(responseMessage({message: ServerMessages.service_unavailable}));
 		}
 	}

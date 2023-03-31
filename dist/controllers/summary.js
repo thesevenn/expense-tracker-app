@@ -29,13 +29,15 @@ function summary(req, res) {
                 });
             }
             else {
-                res.status(404).json((0, errorResponse_1.default)({ message: message_type_1.Messages.not_found }));
+                res
+                    .status(401)
+                    .json((0, errorResponse_1.default)({ message: message_type_1.Messages.not_authenticated }));
             }
         }
         catch (error) {
             if (error instanceof Error) {
                 res
-                    .status(403)
+                    .status(503)
                     .json((0, errorResponse_1.default)({ message: message_type_1.ServerMessages.service_unavailable }));
             }
         }

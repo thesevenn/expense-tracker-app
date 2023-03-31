@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const verifyJwtToken_1 = __importDefault(require("../utils/jwt/verifyJwtToken"));
 const token_type_1 = require("../types/utils/token.type");
+const message_type_1 = require("../types/messages/message.type");
 function isAuthenticated(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         const { accessToken } = req.cookies;
@@ -22,7 +23,7 @@ function isAuthenticated(req, res, next) {
                 res.status(401).json({
                     success: false,
                     auth: false,
-                    message: "Not Authorized",
+                    message: message_type_1.Messages.not_authenticated,
                 });
             }
             else if (accessToken) {
@@ -36,7 +37,7 @@ function isAuthenticated(req, res, next) {
                     res.status(401).json({
                         success: false,
                         auth: false,
-                        message: "Token is not valid or expired",
+                        message: message_type_1.Messages.token_expired,
                     });
                 }
             }
@@ -46,14 +47,14 @@ function isAuthenticated(req, res, next) {
                 res.status(401).json({
                     success: false,
                     auth: false,
-                    message: "Invalid Credentials",
+                    message: message_type_1.Messages.token_expired,
                 });
             }
             else {
                 res.status(503).json({
                     success: false,
                     auth: false,
-                    message: "An error occured on our side, try again later.",
+                    message: message_type_1.ServerMessages.service_unavailable,
                 });
             }
         }

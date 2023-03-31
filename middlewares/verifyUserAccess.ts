@@ -3,6 +3,7 @@ import {Response, NextFunction} from "express";
 import RequestWithUser from "../types/custom/request.type";
 import verifyJwtToken from "../utils/jwt/verifyJwtToken";
 import {Token} from "../types/utils/token.type";
+import {Messages, ServerMessages} from "../types/messages/message.type";
 
 export default async function isAuthenticated(
 	req: RequestWithUser,
@@ -15,7 +16,7 @@ export default async function isAuthenticated(
 			res.status(401).json({
 				success: false,
 				auth: false,
-				message: "Not Authorized",
+				message: Messages.not_authenticated,
 			});
 		} else if (accessToken) {
 			const {user, invalid, expired, name} = verifyJwtToken(
@@ -30,7 +31,7 @@ export default async function isAuthenticated(
 				res.status(401).json({
 					success: false,
 					auth: false,
-					message: "Token is not valid or expired",
+					message: Messages.token_expired,
 				});
 			}
 		}
@@ -39,13 +40,13 @@ export default async function isAuthenticated(
 			res.status(401).json({
 				success: false,
 				auth: false,
-				message: "Invalid Credentials",
+				message: Messages.token_expired,
 			});
 		} else {
 			res.status(503).json({
 				success: false,
 				auth: false,
-				message: "An error occured on our side, try again later.",
+				message: ServerMessages.service_unavailable,
 			});
 		}
 	}

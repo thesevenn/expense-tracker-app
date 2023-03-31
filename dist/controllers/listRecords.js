@@ -50,7 +50,9 @@ function listRecords(req, res) {
                 });
             }
             else {
-                res.status(404).json((0, errorResponse_1.default)({ message: message_type_1.Messages.not_found }));
+                res
+                    .status(401)
+                    .json((0, errorResponse_1.default)({ message: message_type_1.Messages.not_authenticated }));
             }
         }
         catch (error) {
