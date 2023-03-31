@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const routes = express_1.default.Router();
 routes.get("/", (req, res) => {
-    res.status(404).send("hello");
+    res.status(200).json({
+        success: true,
+        message: "Request was completed gracefully",
+    });
 });
 exports.default = routes;

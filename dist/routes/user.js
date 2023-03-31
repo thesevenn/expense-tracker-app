@@ -8,6 +8,7 @@ const verifyUserAccess_1 = __importDefault(require("../middlewares/verifyUserAcc
 const newRecord_1 = __importDefault(require("../controllers/newRecord"));
 const listRecords_1 = __importDefault(require("../controllers/listRecords"));
 const summary_1 = __importDefault(require("../controllers/summary"));
+const removeAccount_1 = __importDefault(require("../controllers/removeAccount"));
 const router = (0, express_1.Router)();
 // TODO =>
 /*
@@ -30,5 +31,6 @@ router.route("/records").post(newRecord_1.default).get(listRecords_1.default);
 // GET at - /summary
 // response shape => {summary-row}
 router.get("/summary", summary_1.default);
+router.delete("/account", removeAccount_1.default);
 //
 exports.default = router;

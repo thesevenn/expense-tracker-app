@@ -12,33 +12,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 const database_1 = require("../database");
+const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 const message_type_1 = require("../types/messages/message.type");
 const errorResponse_1 = __importDefault(require("../utils/errorResponse"));
-function summary(req, res) {
+function removeAccount(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { user, name } = req;
         try {
             if (user && (yield (0, verifyUser_1.default)(user))) {
-                const summary = yield (0, database_1.query)("SELECT * FROM summary WHERE u_id=$1", [user]);
-                res.status(200).json({
-                    success: true,
-                    summary: summary.rows[0],
-                    user: name,
-                });
+                const result = yield (0, database_1.query)("DELETE FROM users WHERE id=$1 returning id;", [user]);
+                if (result.rows[0].id) {
+                    res
+                        .clearCookie("accessToken")
+                        .clearCookie("refreshToken")
+                        .clearCookie("user")
+                        .json((0, errorResponse_1.default)({
+                        message: message_type_1.Messages.account_deleted,
+                        success: true,
+                        quote: "It's sad that we are loosing you!",
+                    }));
+                }
             }
             else {
-                res.status(404).json((0, errorResponse_1.default)({ message: message_type_1.Messages.not_found }));
+                res
+                    .status(401)
+                    .json((0, errorResponse_1.default)({ message: message_type_1.Messages.not_authenticated }));
             }
         }
         catch (error) {
             if (error instanceof Error) {
                 res
-                    .status(403)
+                    .status(503)
                     .json((0, errorResponse_1.default)({ message: message_type_1.ServerMessages.service_unavailable }));
             }
         }
     });
 }
-exports.default = summary;
+exports.default = removeAccount;

@@ -15,12 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = require("../database");
 const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 const createQuery_1 = __importDefault(require("../database/createQuery"));
+const message_type_1 = require("../types/messages/message.type");
+const errorResponse_1 = __importDefault(require("../utils/errorResponse"));
 function listRecords(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { user } = req;
         const userQueries = req.query;
         try {
-            const date = new Date();
             const page = userQueries.page || "1";
             const count = userQueries.count || "10";
             const offset = "" + (parseInt(page) - 1) * parseInt(count);
@@ -48,21 +49,16 @@ function listRecords(req, res) {
                     records: records.rows,
                 });
             }
+            else {
+                res.status(404).json((0, errorResponse_1.default)({ message: message_type_1.Messages.not_found }));
+            }
         }
         catch (error) {
             console.log(error);
-            res.send("not ok");
+            res
+                .status(503)
+                .json((0, errorResponse_1.default)({ message: message_type_1.ServerMessages.service_unavailable }));
         }
     });
 }
 exports.default = listRecords;
-/*
-
-"SELECT * FROM records WHERE u_id=$1 ORDER BY added_at DESC OFFSET $2 ROWS FETCH NEXT $1 ROWS ONLY"
-*/
-/*
-for every year -> query of month;
-if no year provided month are of current year
-filter for month and year with query and asc or desc
-pagination for 10-20 records per req.
-*/

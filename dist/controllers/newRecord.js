@@ -18,6 +18,8 @@ const generateId_1 = __importDefault(require("../utils/generateId"));
 const sanitize_1 = require("../utils/validations/sanitize");
 const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 const parseBoolean_1 = __importDefault(require("../utils/parseBoolean"));
+const message_type_1 = require("../types/messages/message.type");
+const errorResponse_1 = __importDefault(require("../utils/errorResponse"));
 // TODO add auth middleware done
 function newRecord(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -25,10 +27,7 @@ function newRecord(req, res) {
         console.log(credit);
         const { user, name } = req;
         if (!amount || !credit) {
-            res.status(400).json({
-                success: false,
-                message: "Required fields cannot be empty",
-            });
+            res.status(400).json((0, errorResponse_1.default)({ message: message_type_1.Messages.required_field }));
         }
         try {
             // TODO => validation on amount, credit, userId
@@ -63,10 +62,9 @@ function newRecord(req, res) {
         catch (error) {
             if (error instanceof Error) {
                 console.log(error.message);
-                res.status(503).json({
-                    success: false,
-                    message: "An error occured on our side, try again later",
-                });
+                res
+                    .status(503)
+                    .json((0, errorResponse_1.default)({ message: message_type_1.ServerMessages.service_unavailable }));
             }
         }
     });
