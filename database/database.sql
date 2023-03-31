@@ -34,5 +34,4 @@ CREATE DATABASE finances;
                         ON DELETE CASCADE
     )
 
--- create new expense => day 1 to day 30 (1 month) if want month select * from expense where id = "" AND month = may
 -- SELECT * from users where EXTRACT(year from users.joined)=2023;

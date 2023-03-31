@@ -20,7 +20,6 @@ const verifyUser_1 = __importDefault(require("../utils/verifyUser"));
 const parseBoolean_1 = __importDefault(require("../utils/parseBoolean"));
 const message_type_1 = require("../types/messages/message.type");
 const errorResponse_1 = __importDefault(require("../utils/errorResponse"));
-// TODO add auth middleware done
 function newRecord(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         let { amount, credit } = req.body;

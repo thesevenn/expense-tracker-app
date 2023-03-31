@@ -7,15 +7,6 @@ import logout from "../controllers/logout";
 import signup from "../controllers/signup";
 import newAccess from "../controllers/newAccess";
 
-// TODO =>
-/* 
-create new user with email and password or (email only login) = w/ JWT.
-store that user in db.
-setup login route,
-logout route,
-generate new access for refresh valid refresh token
-*/
-
 // GET at - /logout
 //  logs user out and invadlidates the access-token
 router.get("/logout", logout);

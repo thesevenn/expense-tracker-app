@@ -16,11 +16,3 @@ export default function createQuery(options?: Options): string {
 	}
 	return query;
 }
-
-/* 
-delete route for user/account - done
-remove extra comments - in process
-complete error intreface. done
-refactor code if any needed.
-write test for summary,listRecords and others. - done
-*/

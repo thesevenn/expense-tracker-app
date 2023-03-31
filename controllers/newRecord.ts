@@ -10,7 +10,6 @@ import parseBoolean from "../utils/parseBoolean";
 import {Messages, ServerMessages} from "../types/messages/message.type";
 import responseMessage from "../utils/errorResponse";
 
-// TODO add auth middleware done
 export default async function newRecord(
 	req: RequestWithUser,
 	res: Response
