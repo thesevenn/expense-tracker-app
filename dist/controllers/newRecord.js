@@ -22,10 +22,9 @@ const message_type_1 = require("../types/messages/message.type");
 const errorResponse_1 = __importDefault(require("../utils/errorResponse"));
 function newRecord(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        let { amount, credit } = req.body;
-        console.log(credit);
+        let { amount, credit, description } = req.body;
         const { user, name } = req;
-        if (!amount || !credit) {
+        if (!amount) {
             res.status(400).json((0, errorResponse_1.default)({ message: message_type_1.Messages.required_field }));
         }
         try {
@@ -33,29 +32,40 @@ function newRecord(req, res) {
             if (user && (yield (0, verifyUser_1.default)(user))) {
                 amount = parseFloat((0, sanitize_1.sanitize)(amount));
                 credit = (0, parseBoolean_1.default)(credit);
+                description = (0, sanitize_1.sanitize)(description);
+                if (!description) {
+                    description = "-";
+                }
+                else if (!amount || !description) {
+                    res
+                        .status(400)
+                        .json((0, errorResponse_1.default)({ message: message_type_1.Messages.required_field }));
+                }
                 const id = (0, generateId_1.default)(name, idvarient_type_1.Varient.tiny);
-                const result = yield (0, database_1.query)("INSERT INTO records(id,amount,credit,u_id) values($1,$2,$3,$4) returning *;", [id, amount, credit, user]);
+                const result = yield (0, database_1.query)("INSERT INTO records(id,amount,credit,description,u_id) values($1,$2,$3,$4,$5) returning *;", [id, amount, credit, description, user]);
                 const summary = yield (0, database_1.query)("SELECT credited,debited FROM summary WHERE u_id=$1;", [user]);
-                let { credited, debited } = summary.rows[0];
-                if (credit) {
-                    const updatedCredit = amount + parseFloat(credited);
-                    yield (0, database_1.query)("UPDATE summary SET credited=$1 WHERE u_id=$2;", [
-                        updatedCredit,
-                        user,
-                    ]);
+                if (summary.rows[0]) {
+                    console.log(summary.rows);
+                    let { credited, debited } = summary.rows[0];
+                    if (credit) {
+                        const updatedCredit = amount + parseFloat(credited);
+                        yield (0, database_1.query)("UPDATE summary SET credited=$1 WHERE u_id=$2;", [
+                            updatedCredit,
+                            user,
+                        ]);
+                    }
+                    else if (!credit) {
+                        const updatedDebit = amount + parseFloat(debited);
+                        yield (0, database_1.query)("UPDATE summary SET debited=$1 WHERE u_id=$2;", [
+                            updatedDebit,
+                            user,
+                        ]);
+                    }
+                    res.status(200).json({
+                        success: true,
+                        record: result.rows[0],
+                    });
                 }
-                else if (!credit) {
-                    console.log(false);
-                    const updatedDebit = amount + parseFloat(debited);
-                    yield (0, database_1.query)("UPDATE summary SET debited=$1 WHERE u_id=$2;", [
-                        updatedDebit,
-                        user,
-                    ]);
-                }
-                res.status(200).json({
-                    success: true,
-                    record: result.rows[0],
-                });
             }
         }
         catch (error) {

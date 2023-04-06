@@ -24,3 +24,6 @@ router.get("/summary", summary_1.default);
 router.delete("/account", removeAccount_1.default);
 //
 exports.default = router;
+// TODO => add description in new records
+// csrf prevent
+// validation of email and password and text counts of description

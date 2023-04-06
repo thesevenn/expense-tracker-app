@@ -29,7 +29,7 @@ function signup(req, res) {
             if (!name) {
                 res.status(400).json((0, errorResponse_1.default)({ message: message_type_1.Messages.name_required }));
             }
-            if (!email || !password) {
+            else if (!email || !password) {
                 res
                     .status(400)
                     .json((0, errorResponse_1.default)({ message: message_type_1.Messages.fields_cannot_empty }));
@@ -48,12 +48,10 @@ function signup(req, res) {
                     // create summary for first time
                     const summaryId = (0, generateId_1.default)(name, idvarient_type_1.Varient.tiny);
                     yield (0, database_1.query)("INSERT INTO summary(id,debited,credited,u_id) values($1,$2,$3,$4);", [summaryId, "0.00", "0.00", id]);
-                    res
-                        .status(200)
-                        .json((0, errorResponse_1.default)({
-                        message: message_type_1.Messages.registerd_success,
+                    res.status(201).json({
                         success: true,
-                    }));
+                        message: message_type_1.Messages.registerd_success,
+                    });
                 }
             }
         }

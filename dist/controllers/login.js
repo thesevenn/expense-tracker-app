@@ -48,12 +48,17 @@ function login(req, res) {
                         }), {
                             httpOnly: true,
                             maxAge: 1000 * 60 * 30,
+                            sameSite: "strict",
                         })
                             .cookie("refreshToken", (0, signJwtToken_1.default)(rows[0].id, rows[0].name, {
                             type: token_type_1.Token.refresh,
                             expiresIn: durations_type_1.durations.long,
-                        }), { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 })
-                            .cookie("user", rows[0].id, { httpOnly: true })
+                        }), {
+                            httpOnly: true,
+                            maxAge: 1000 * 60 * 60 * 24 * 7,
+                            sameSite: "strict",
+                        })
+                            .cookie("user", rows[0].id, { httpOnly: true, sameSite: "strict" })
                             .json({
                             success: true,
                             auth: true,

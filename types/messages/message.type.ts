@@ -20,6 +20,7 @@ export enum Messages {
 	not_found = "cannot find what you are looking for",
 	account_deleted = "Your account has been deleted and all the associated data will be removed from our servers.",
 	account_not_found = "We do not recognize your email or password on our systems",
+	invalid_input = "Please provide right value for the field",
 }
 
 /* 

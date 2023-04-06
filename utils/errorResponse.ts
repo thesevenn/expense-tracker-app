@@ -7,7 +7,9 @@ interface ErrorResponse {
 }
 
 export default function responseMessage(options: ErrorResponse) {
-	const {message, success = false, quote} = options;
+	const {message, quote} = options;
+	const success = options.success || false;
+
 	let response: ErrorResponse = {success, message};
 	if (quote) {
 		response.quote = quote;

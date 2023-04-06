@@ -42,6 +42,7 @@ export default async function login(req: Request, res: Response) {
 							{
 								httpOnly: true,
 								maxAge: 1000 * 60 * 30,
+								sameSite: "strict",
 							}
 						)
 						.cookie(
@@ -50,9 +51,13 @@ export default async function login(req: Request, res: Response) {
 								type: Token.refresh,
 								expiresIn: durations.long,
 							}),
-							{httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7}
+							{
+								httpOnly: true,
+								maxAge: 1000 * 60 * 60 * 24 * 7,
+								sameSite: "strict",
+							}
 						)
-						.cookie("user", rows[0].id, {httpOnly: true})
+						.cookie("user", rows[0].id, {httpOnly: true, sameSite: "strict"})
 						.json({
 							success: true,
 							auth: true,

@@ -21,8 +21,7 @@ export default async function signup(
 	try {
 		if (!name) {
 			res.status(400).json(responseMessage({message: Messages.name_required}));
-		}
-		if (!email || !password) {
+		} else if (!email || !password) {
 			res
 				.status(400)
 				.json(responseMessage({message: Messages.fields_cannot_empty}));
@@ -49,15 +48,10 @@ export default async function signup(
 					"INSERT INTO summary(id,debited,credited,u_id) values($1,$2,$3,$4);",
 					[summaryId, "0.00", "0.00", id]
 				);
-
-				res
-					.status(200)
-					.json(
-						responseMessage({
-							message: Messages.registerd_success,
-							success: true,
-						})
-					);
+				res.status(201).json({
+					success: true,
+					message: Messages.registerd_success,
+				});
 			}
 		}
 	} catch (error) {

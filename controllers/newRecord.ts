@@ -14,49 +14,62 @@ export default async function newRecord(
 	req: RequestWithUser,
 	res: Response
 ): Promise<void> {
-	let {amount, credit} = req.body;
-	console.log(credit);
+	let {amount, credit, description} = req.body;
 
 	const {user, name} = req;
-	if (!amount || !credit) {
-		res.status(400).json(responseMessage({message: Messages.required_field}));
-	}
-
 	try {
 		// TODO => validation on amount, credit, userId
 		if (user && (await isValidUser(user))) {
-			amount = parseFloat(sanitize(amount));
 			credit = parseBoolean(credit);
+			description = sanitize(description);
+			if (!description) {
+				description = "-";
+			} else if (!amount) {
+				res
+					.status(400)
+					.json(responseMessage({message: Messages.required_field}));
+			} else if (isNaN(amount)) {
+				res
+					.status(400)
+					.json(responseMessage({message: Messages.invalid_input}));
+			} else {
+				amount = parseFloat(sanitize(amount));
+				const id: string = generateId(name, Varient.tiny);
+				const result = await query(
+					"INSERT INTO records(id,amount,credit,description,u_id) values($1,$2,$3,$4,$5) returning *;",
+					[id, amount, credit, description, user]
+				);
+				const summary = await query(
+					"SELECT credited,debited FROM summary WHERE u_id=$1;",
+					[user]
+				);
+				if (summary.rows[0]) {
+					console.log(summary.rows);
 
-			const id: string = generateId(name, Varient.tiny);
-			const result = await query(
-				"INSERT INTO records(id,amount,credit,u_id) values($1,$2,$3,$4) returning *;",
-				[id, amount, credit, user]
-			);
-			const summary = await query(
-				"SELECT credited,debited FROM summary WHERE u_id=$1;",
-				[user]
-			);
-			let {credited, debited} = summary.rows[0];
-			if (credit) {
-				const updatedCredit: string = amount + parseFloat(credited);
-				await query("UPDATE summary SET credited=$1 WHERE u_id=$2;", [
-					updatedCredit,
-					user,
-				]);
-			} else if (!credit) {
-				console.log(false);
-				const updatedDebit: string = amount + parseFloat(debited);
-				await query("UPDATE summary SET debited=$1 WHERE u_id=$2;", [
-					updatedDebit,
-					user,
-				]);
+					let {credited, debited} = summary.rows[0];
+					if (credit) {
+						console.log(credited);
+
+						const updatedCredit: string = amount + parseFloat(credited);
+						await query("UPDATE summary SET credited=$1 WHERE u_id=$2;", [
+							updatedCredit,
+							user,
+						]);
+					} else if (!credit) {
+						console.log(debited);
+
+						const updatedDebit: string = amount + parseFloat(debited);
+						await query("UPDATE summary SET debited=$1 WHERE u_id=$2;", [
+							updatedDebit,
+							user,
+						]);
+					}
+					res.status(200).json({
+						success: true,
+						record: result.rows[0],
+					});
+				}
 			}
-
-			res.status(200).json({
-				success: true,
-				record: result.rows[0],
-			});
 		}
 	} catch (error) {
 		if (error instanceof Error) {

@@ -26,3 +26,7 @@ router.delete("/account", removeAccount);
 //
 
 export default router;
+
+// TODO => add description in new records
+// csrf prevent
+// validation of email and password and text counts of description
